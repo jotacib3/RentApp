@@ -1,0 +1,43 @@
+<div class="container" style="padding-top:20px"> 
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+        <app-client-reserv-create [clientreserv]="null"></app-client-reserv-create>
+        <table class="table table-hover table-responsive" style="padding-top:20px">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Reserv</th>
+                <th scope="col">Client</th>
+                <th scope="col">Code</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let clientreserv of clientreservsPagination; let i = index">
+                <th *ngIf="clientreserv.reserv?.id > 9" scope="row">  REV {{clientreserv.reserv?.id}}</th>
+                <th *ngIf="!(clientreserv.reserv?.id > 9)" scope="row">REV 0{{clientreserv.reserv?.id}}</th>
+                <td>{{clientreserv.client?.name}} {{clientreserv.client?.lastName}}</td>
+                <td>{{clientreserv.code}}</td>
+                <td>
+                  <app-client-reserv-create [clientreserv]="clientreserv"></app-client-reserv-create>
+                </td>
+                <td>
+                  <button (click)="deleteClientReserv(clientreserv.id)" class="btn btn-success">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row">
+              <div class="col-xs-12 col-12" #pag>
+                <pagination
+                 boundaryLinks="True"
+                 [totalItems]="clientsreservs.length"
+                 [(ngModel)]="currentPage"
+                 [rotate]="false"
+                 [maxSize]="3"
+                 (pageChanged)="pageChanged($event)"></pagination>
+              </div>
+            </div>
+    </div>     
+  </div>
+</div>

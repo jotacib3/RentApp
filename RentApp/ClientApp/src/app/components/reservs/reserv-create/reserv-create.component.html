@@ -1,0 +1,146 @@
+<!-- <button type="button" [ngClass]="classMode()" (click)="openModal(template)">{{mode}}</button> -->
+<button type="button" [ngClass]="classMode()" (click)="openModal(template)">{{mode === "Editar" ? mode : "Crear Reserva"}}</button>
+ 
+<ng-template #template>
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">{{mode}} Reserva</h4>
+        <button type="button" class="close pull-right" (click)="close(postForm)" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <br>
+          <form (submit)="onSaveReserv(postForm)" #postForm="ngForm">
+              <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <input class="form-control" 
+                              type="text" 
+                              name="reservationMethod"            
+                              placeholder="Entrar Método Reservación"
+                              [ngModel]="reserv?.reservationMethod">
+                          </div>
+                      </div>
+                      <div class="col-6">                  
+                          <div class="form-group">
+                              <input type="text"
+                                     class="form-control"
+                                     name="bsRangeValue"
+                                     placeholder="Entrar Rango de Fecha"
+                                     bsDaterangepicker
+                                     [ngModel]="bsRangeValue"
+                                     required>
+                            </div>
+                      </div>
+                      <div class="col-6"> 
+                            <div class="form-group">
+                              <input class="form-control"
+                                type="number"
+                                name="realPayment"
+                                placeholder="Entrar Pago Real"
+                                [ngModel]="reserv?.realPayment"
+                                required>
+                            </div>   
+                      </div>
+                      <div class="col-6">    
+                            <div class="form-group">
+                                <input class="form-control"
+                                  type="number"
+                                  name="fictionalPayment"
+                                  placeholder="Entrar Pago Ficticio"
+                                  [ngModel]="reserv?.fictionalPayment"
+                                  required>
+                              </div> 
+                      </div>
+                      <div class="col-6"> 
+                              <div class="form-group">
+                                <select class="form-control" name="consume" [ngModel]="reserv?.consume" required>
+                                  <option [ngValue]="null">Selecciona Consume</option>
+                                  <option value="true">True</option>
+                                  <option value="false">False</option>
+                                </select>
+                              </div> 
+                    </div>
+                    
+                    <div class="col-6"> 
+                        <h6>Puntuación</h6>
+                        <div class="form-group">
+                            <rating 
+                            max="5" 
+                            name = "rating"
+                            [ngModel]="reserv?.rating" 
+                            [customTemplate]="tt">
+                            </rating>
+                            <ng-template #tt let-i="index" let-v="value">
+                            <button type="button" class="btn btn-{{i < v ? 'warning' : 'default'}}">
+                              {{i < v ? '&#9733;' : '&#9734;'}}
+                            </button>
+                            </ng-template>
+                        </div>
+                  </div>
+                  <div class="col-12">
+                     <h5>Por favor adiciona clientes a la reserva</h5>
+                      <app-client-create [client]="null" [countries]="countries"></app-client-create>
+                      <br>
+                      <br>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <select class="form-control" name="clientId" [(ngModel)]="clientId">
+                                <option [ngValue]="null">Selecciona Cliente</option>
+                              <option *ngFor="let client of clients" [value]="client.id" >{{client?.name}} {{client?.lastName}}</option>
+                            </select>
+                          </div> 
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input class="form-control"
+                              type="text" 
+                              name="code"                
+                              placeholder="Entrar Código"
+                              [(ngModel)]="code">
+                          </div>
+                    </div>
+                    <div class="col-2">
+                        <button 
+                        type="button"
+                        (click)="addClientInReserve()"
+                        class="btn btn-primary">Adicionar Cliente</button>
+                    </div>
+                    <div class="col-md-12">
+                        <table class="table table-hover table-responsive" style="padding-top:20px" *ngIf="clientsCode.length > 0 || mode !== 'Create'">
+                            <thead class="thead-light">
+                              <tr>
+                                <th scope="col">Nombre Completo</th>
+                                <th scope="col">Código de Reserva</th>
+                                <th scope="col">Eliminar de la Reserva</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let client of reserv?.clientsReserv">
+                                    <td>{{getClient(client.clientId)}}</td>
+                                    <td>{{client.code}}</td>
+                                    <td>
+                                      <button type="button" (click)="deleteClientInReserve(client.id, true)" class="btn btn-success">Eliminar</button>
+                                    </td>
+                                  </tr>
+                              <tr *ngFor="let client of clientsCode">
+                                <td>{{getClient(client.clientId)}}</td>
+                                <td>{{client.code}}</td>
+                                <td>
+                                  <button  type="button" (click)="deleteClientInReserve(client.clientId, false)" class="btn btn-success">Eliminar</button>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                    </div>
+                    
+                  </div>
+                  
+                  <button 
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="postForm.invalid">{{mode}}</button>
+          </form>
+      </div>    
+</ng-template>     

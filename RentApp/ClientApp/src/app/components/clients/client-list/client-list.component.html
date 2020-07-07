@@ -1,0 +1,89 @@
+<div style="padding-top:20px">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+        <app-client-create [client]="null" [countries]="countries"></app-client-create>
+        <!-- <app-alert-modal [alertModal]=openModal($event)></app-alert-modal> -->
+        <br>
+        <br>
+        <div class="row">
+          <div class="col-8">
+              <div class="input-group">
+                  <input type="text" [(ngModel)] = "search" (ngChange)="filterChange" class="form-control" placeholder="Buscar cliente por palabra clave">
+              </div>
+          </div>
+          <div class="col-4">
+              <button type="button" class="btn btn-primary" (click)="filterChange()">Buscar</button>
+          </div>
+        </div> 
+ 
+        <table class="table table-hover table-responsive" style="padding-top:20px">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" (click)="orderBy('name')" style="cursor: pointer">
+                  Nombre
+                  <img
+                   *ngIf="filter.get('name') !== null"
+                    width="15"
+                    alt="Renta Logo"
+                    [src]="printArrow('name')">                                
+                </th>
+                <th scope="col" (click)="orderBy('lastName')" style="cursor: pointer">
+                  Apellidos 
+                  <img
+                  *ngIf="filter.get('lastName') !== null"
+                   width="15"
+                   alt="Renta Logo"
+                   [src]="printArrow('lastName')"> 
+                </th>
+                <th scope="col" (click)="orderBy('CI')" style="cursor: pointer">
+                  CI
+                  <img
+                  *ngIf="filter.get('CI') !== null"
+                   width="15"
+                   alt="Renta Logo"
+                   [src]="printArrow('CI')"> 
+                </th>
+                <th scope="col" (click)="orderBy('country')" style="cursor: pointer">
+                  País
+                  <img
+                  *ngIf="filter.get('country') !== null"
+                   width="15"
+                   alt="Renta Logo"
+                   [src]="printArrow('country')"> 
+                </th>
+                <th scope="col">Editar</th>
+                <th scope="col">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let client of clientsPagination">
+                <td>{{client.name}}</td>
+                <td>{{client.lastName}}</td>
+                <td>{{client.ci}}</td>
+                <td>{{client.country?.name}}</td>
+                <td>
+                  <app-client-create [client]="client" [countries]="countries"></app-client-create>
+                </td>
+                <td>
+                  <button (click)="deleteClient(client.id)" class="btn btn-success">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row">
+              <div class="col-xs-12 col-12">
+                <pagination
+                 boundaryLinks="true"
+                 [totalItems]="filtersClients.length"
+                 [(ngModel)]="currentPage"
+                 [rotate]="false"
+                 [maxSize]="8"
+                 (pageChanged)="pageChanged($event)"></pagination>
+              </div>
+          </div>
+          <svg id="clouds" alt="Gray Clouds Background" xmlns="http://www.w3.org/2000/svg" width="2611.084" height="485.677" viewBox="0 0 2611.084 485.677">
+            <path id="Path_39" data-name="Path 39" d="M2379.709,863.793c10-93-77-171-168-149-52-114-225-105-264,15-75,3-140,59-152,133-30,2.83-66.725,9.829-93.5,26.25-26.771-16.421-63.5-23.42-93.5-26.25-12-74-77-130-152-133-39-120-212-129-264-15-54.084-13.075-106.753,9.173-138.488,48.9-31.734-39.726-84.4-61.974-138.487-48.9-52-114-225-105-264,15a162.027,162.027,0,0,0-103.147,43.044c-30.633-45.365-87.1-72.091-145.206-58.044-52-114-225-105-264,15-75,3-140,59-152,133-53,5-127,23-130,83-2,42,35,72,70,86,49,20,106,18,157,5a165.625,165.625,0,0,0,120,0c47,94,178,113,251,33,61.112,8.015,113.854-5.72,150.492-29.764a165.62,165.62,0,0,0,110.861-3.236c47,94,178,113,251,33,31.385,4.116,60.563,2.495,86.487-3.311,25.924,5.806,55.1,7.427,86.488,3.311,73,80,204,61,251-33a165.625,165.625,0,0,0,120,0c51,13,108,15,157-5a147.188,147.188,0,0,0,33.5-18.694,147.217,147.217,0,0,0,33.5,18.694c49,20,106,18,157,5a165.625,165.625,0,0,0,120,0c47,94,178,113,251,33C2446.709,1093.793,2554.709,922.793,2379.709,863.793Z" transform="translate(142.69 -634.312)" fill="#eee"/>
+          </svg>
+    </div>     
+  </div>
+</div>

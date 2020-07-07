@@ -1,0 +1,63 @@
+<button type="button" [ngClass]="classMode()" (click)="openModal(template)">{{mode === "Editar" ? mode : "Crear Cliente"}}</button>
+ 
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{mode}} Cliente</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="close(postForm)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form (submit)="onSaveClient(postForm)" #postForm="ngForm">
+      <div class="form-group">
+        <input class="form-control" 
+          type="text" 
+          name="name"
+          required                    
+          placeholder="Entrar Nombre"
+          [ngModel]="client?.name"
+          #name="ngModel">
+          <span class="help-block" *ngIf="!name?.valid && name?.touched">
+            Por favor inserta un nombre válido.
+          </span>
+      </div>   
+      <div class="form-group">
+        <input class="form-control" 
+          type="text" 
+          name="lastName"
+          required                    
+          placeholder="Entrar Apellido"
+          [ngModel]="client?.lastName"
+          #lastName="ngModel">
+          <span class="help-block" *ngIf="!lastName.valid && lastName.touched">
+            Por favor inserta un apellido válido.
+          </span>
+      </div>  
+      <div class="form-group">
+        <input class="form-control" 
+          type="text" 
+          name="ci"
+          required                    
+          placeholder="Entrar CI"
+          [ngModel]="client?.ci"
+          #ci="ngModel">
+          <span class="help-block" *ngIf="!ci.valid && ci.touched">
+            Por favor inserta un CI válido.
+          </span>
+      </div> 
+      <app-country-create [country]="null"></app-country-create>
+      <br>
+      <br>
+      <div class="form-group">
+        <select class="form-control" name="countryId" [ngModel]="client?.countryId" required>
+            <option [ngValue]="null">Selecciona País</option>
+          <option *ngFor="let country of countries" [value]="country.id">{{country?.name}}</option>
+        </select>
+      </div> 
+      <button
+       type="submit"
+       class="btn btn-primary"
+       [disabled]="postForm.invalid">{{mode}}</button>
+    </form>
+  </div>
+</ng-template>

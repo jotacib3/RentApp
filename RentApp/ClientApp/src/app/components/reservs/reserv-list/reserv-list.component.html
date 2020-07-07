@@ -1,0 +1,161 @@
+<div class="container" style="padding-top:20px"> 
+    <div class="row justify-content-md-center">
+      <div class="col-md-auto">
+          <app-reserv-create [reserv]="null"></app-reserv-create>
+          <br>
+        <br>
+        <div class="row">
+          <div class="col-2">
+              <div class="form-group">
+                  <input type="text" [(ngModel)] = "searchId" class="form-control" placeholder="Por Id">
+              </div>
+          </div>
+          <div class="col-4">                  
+            <div class="form-group">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Por Fecha"
+                       bsDaterangepicker
+                       [(ngModel)]="searchBsRangeValue">
+              </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+                <input type="text" [(ngModel)] = "searchRealPayment" class="form-control" placeholder="Por Pago Real">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+                <input type="text" [(ngModel)] = "searchFictionalPayment" class="form-control" placeholder="Por Pago Ficiticio">
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+                <input type="text" [(ngModel)] = "searchReservationMetod" class="form-control" placeholder="Por Metodo">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4"> 
+            <div class="form-group">
+              <select class="form-control" [(ngModel)]="searchConsume" placeholder="Por Metodo">
+                <option [ngValue]="''">Sin Seleccionar</option>
+                <option value="null"></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            </div> 
+          </div>
+          <div class="col-2">
+            <div class="form-group">
+                <input type="text" [(ngModel)] = "searchRating" class="form-control" placeholder="Por Puntos">
+            </div>
+          </div>
+            <div class="col-4">
+                <button type="button" class="btn btn-primary" (click)="filterChange()">Buscar</button>
+            </div>
+        </div> 
+          <table class="table table-hover table-responsive" style="padding-top:20px">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" (click)="orderBy('id')" style="cursor: pointer">
+                    Número Reserva
+                    <img
+                   *ngIf="filter.get('id') !== null"
+                    width="15"
+                    alt="Renta Logo"
+                    [src]="printArrow('id')"> 
+                  </th>
+                  <th scope="col" (click)="orderBy('checkIn')" style="cursor: pointer">
+                    Fecha Entrada
+                    <img
+                   *ngIf="filter.get('checkIn') !== null"
+                    width="15"
+                    alt="Renta Logo"
+                    [src]="printArrow('checkIn')">                 
+                  </th>
+                  <th scope="col" (click)="orderBy('checkOut')" style="cursor: pointer">
+                    Fecha Salida
+                    <img
+                   *ngIf="filter.get('checkOut') !== null"
+                    width="15"
+                    alt="Renta Logo"
+                    [src]="printArrow('checkOut')"> 
+                  </th>
+                  <th scope="col" (click)="orderBy('realPayment')" style="cursor: pointer">
+                    Pago Real
+                    <img
+                   *ngIf="filter.get('realPayment') !== null"
+                    width="15"
+                    alt="Renta Logo"
+                    [src]="printArrow('realPayment')"> 
+                  </th>
+                  <th scope="col" (click)="orderBy('fictionalPayment')" style="cursor: pointer">
+                    Pago Ficticio
+                    <img
+                   *ngIf="filter.get('fictionalPayment') !== null"
+                    width="15"
+                    alt="Renta Logo"
+                    [src]="printArrow('fictionalPayment')"> 
+                  </th>
+                  <th scope="col"(click)="orderBy('reservationMetod')" style="cursor: pointer">
+                    Metodo Reservation
+                    <img
+                   *ngIf="filter.get('reservationMetod') !== null"
+                    width="15"
+                    alt="Renta Logo"
+                    [src]="printArrow('reservationMetod')"> 
+                  </th>
+                  <th scope="col" >Consumió?</th>
+                  <th scope="col" (click)="orderBy('rating')" style="cursor: pointer">
+                    Puntuación
+                    <img
+                   *ngIf="filter.get('rating') !== null"
+                    width="15"
+                    alt="Renta Logo"
+                    [src]="printArrow('rating')"> 
+                  </th>
+                  <th scope="col">Editar</th>
+                  <th scope="col">Eliminar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let reserv of reservsPagination; let i = index">
+                  <th *ngIf="reserv.id > 9" scope="row">REV {{reserv.id}}</th>
+                  <th *ngIf="!(reserv.id > 9)" scope="row">REV 0{{reserv.id}}</th>
+                  <td>{{reserv.checkIn | date: 'dd-MM-yyyy'}}</td>
+                  <td>{{reserv.checkOut | date: 'dd-MM-yyyy'}}</td>
+                  <td>{{reserv.realPayment}}</td>
+                  <td>{{reserv.fictionalPayment}}</td>
+                  <td>{{reserv.reservationMethod}}</td>
+                  <td>{{reserv.consume}}</td>
+                  <td>
+                      <rating [(ngModel)]="reserv.rating" [max]="max" [readonly]="isReadonly"></rating>
+                  </td>
+                  <td>
+                    <app-reserv-create [reserv]="reserv"></app-reserv-create>
+                  </td>
+                  <td>
+                    <button (click)="deleteReserv(reserv.id, i)" class="btn btn-success">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="row">
+                <div class="col-xs-12 col-12" #pag>
+                  <pagination
+                   boundaryLinks="True"
+                   [totalItems]="filtersReservs.length"
+                   [(ngModel)]="currentPage"
+                   [rotate]="false"
+                   [maxSize]="16"
+                   (pageChanged)="pageChanged($event)"></pagination>
+                </div>
+            </div>
+            <svg id="clouds" alt="Gray Clouds Background" xmlns="http://www.w3.org/2000/svg" width="2611.084" height="485.677" viewBox="0 0 2611.084 485.677">
+              <path id="Path_39" data-name="Path 39" d="M2379.709,863.793c10-93-77-171-168-149-52-114-225-105-264,15-75,3-140,59-152,133-30,2.83-66.725,9.829-93.5,26.25-26.771-16.421-63.5-23.42-93.5-26.25-12-74-77-130-152-133-39-120-212-129-264-15-54.084-13.075-106.753,9.173-138.488,48.9-31.734-39.726-84.4-61.974-138.487-48.9-52-114-225-105-264,15a162.027,162.027,0,0,0-103.147,43.044c-30.633-45.365-87.1-72.091-145.206-58.044-52-114-225-105-264,15-75,3-140,59-152,133-53,5-127,23-130,83-2,42,35,72,70,86,49,20,106,18,157,5a165.625,165.625,0,0,0,120,0c47,94,178,113,251,33,61.112,8.015,113.854-5.72,150.492-29.764a165.62,165.62,0,0,0,110.861-3.236c47,94,178,113,251,33,31.385,4.116,60.563,2.495,86.487-3.311,25.924,5.806,55.1,7.427,86.488,3.311,73,80,204,61,251-33a165.625,165.625,0,0,0,120,0c51,13,108,15,157-5a147.188,147.188,0,0,0,33.5-18.694,147.217,147.217,0,0,0,33.5,18.694c49,20,106,18,157,5a165.625,165.625,0,0,0,120,0c47,94,178,113,251,33C2446.709,1093.793,2554.709,922.793,2379.709,863.793Z" transform="translate(142.69 -634.312)" fill="#eee"/>
+            </svg>
+      </div>     
+    </div>
+  </div>
+  

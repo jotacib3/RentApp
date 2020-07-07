@@ -1,0 +1,30 @@
+<button type="button" [ngClass]="classMode()" (click)="openModal(template)">{{mode === "Editar" ? mode : "Crear País"}}</button>
+ 
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{mode}} País</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="close(postForm)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form (submit)="onSaveCountry(postForm)" #postForm="ngForm">
+      <div class="form-group">
+        <input class="form-control" 
+          type="text" 
+          name="name"
+          required                    
+          placeholder="Enter Name"
+          [ngModel]="country?.name"
+          #name="ngModel">
+          <span class="help-block" *ngIf="!name.valid && name.touched">
+            Por favor inserta un nombre válido.
+          </span>
+      </div>     
+      <button
+       type="submit"
+       class="btn btn-primary"
+       [disabled]="postForm.invalid">{{mode}}</button>
+    </form>
+  </div>
+</ng-template>
